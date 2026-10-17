@@ -26,7 +26,7 @@ fun InputData(modifier: Modifier) {
             contentAlignment = Alignment.Center
             ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
+                painter = painterResource(id = R.drawable.gamabarbackground),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()

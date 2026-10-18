@@ -20,8 +20,7 @@ fun InputData(modifier: Modifier) {
     Column() {
         Box(modifier = Modifier
             .fillMaxWidth()
-            .height(340.dp)
-            .padding(10.dp)
+            .height(200.dp)
             .clip(RoundedCornerShape(bottomStart = 25.dp)),
             contentAlignment = Alignment.Center
             ) {

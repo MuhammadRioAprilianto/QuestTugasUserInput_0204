@@ -36,10 +36,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import java.time.ZoneId
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {}, onDismiss: () -> Unit = {}) {
     //Variable untuk menyimpan apa yang diketik oleh KeyBoard
@@ -48,6 +54,9 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
     var email by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedDateText by remember { mutableStateOf("Tgl Lahir") }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedExperience by remember { mutableStateOf("Experience") }
+    val experienceOptions = listOf("Beginner (0-1 Tahun)", "Intermediate (1-3 Tahun)", "Expert (>3 Tahun)")
     val datePickerState = rememberDatePickerState()
 
     Column(modifier = modifier
@@ -145,6 +154,41 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                                 .matchParentSize()
                                 .clickable { showDatePicker = true }
                         )
+                    }
+                    Spacer(modifier = Modifier.width(5.dp))
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { expanded = !expanded },
+                        modifier = Modifier.width(150.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = selectedExperience,
+                            onValueChange = {},
+                            readOnly = true,
+                            shape = MaterialTheme.shapes.extraLarge,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                            },
+                            modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.Gray,
+                                unfocusedBorderColor = Color.Gray
+                            )
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            experienceOptions.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(text = option) },
+                                    onClick = {
+                                        selectedExperience = option
+                                        expanded = false
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }

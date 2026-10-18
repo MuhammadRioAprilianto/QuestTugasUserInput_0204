@@ -38,6 +38,8 @@ fun InputData(modifier: Modifier) {
     //Variable untuk menyimpan apa yang diketik oleh KeyBoard
     var namaDepan by remember { mutableStateOf("") }
     var namaBelakang by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black),

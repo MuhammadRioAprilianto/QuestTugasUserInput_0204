@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -247,6 +248,26 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                         Text(text = "Web", fontSize = 12.sp, color = Color.Black)
                     }
                 }
+                Spacer(modifier = Modifier.height(12.dp).padding(start = 8.dp, end = 8.dp))
+                Button(
+                    modifier = Modifier.fillMaxWidth(1f),
+                    //Button bisa digunakan ketika semua kolom sudah terisi
+                    enabled = hasilNamaDepan.isNotEmpty() && hasilNamaBelakang.isNotEmpty() && hasilEmail.isNotEmpty() && hasilTglLahir.isNotEmpty() && hasilExperience.isNotEmpty(),
+                    onClick = {
+                        hasilNamaDepan = namaDepan
+                        hasilNamaBelakang = namaBelakang
+                        hasilEmail = email
+                        hasilTglLahir = selectedDateText
+                        hasilExperience = selectedExperience
+                        hasilSkills = listOfNotNull(
+                            if (checkedAndroid) "Android" else null,
+                            if (checkedUiUx) "UI/UX" else null,
+                            if (checkedWeb) "Web" else null
+                        )
+                    }
+                ) {
+                    Text(text = "Register")
+                }
             }
         }
     }
@@ -262,7 +283,6 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     val millis = datePickerState.selectedDateMillis
                     onDateSelected(millis)
 
-                    // Opsional: Mengubah milidetik agar tampil teks tanggalnya di tombol
                     millis?.let {
                         val formattedDate = java.time.Instant.ofEpochMilli(it)
                             .atZone(ZoneId.of("UTC"))

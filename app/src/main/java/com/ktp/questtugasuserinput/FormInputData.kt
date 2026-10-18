@@ -47,7 +47,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
     var namaBelakang by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
-    var selectedDateText by remember { mutableStateOf("Pilih Tanggal Lahir") }
+    var selectedDateText by remember { mutableStateOf("Tgl Lahir") }
     val datePickerState = rememberDatePickerState()
 
     Column(modifier = modifier
@@ -116,6 +116,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     label = {Text(text = "Email")},
                     onValueChange = {email = it}
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Box {
                         OutlinedTextField(
@@ -123,7 +124,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             onValueChange = { },
                             readOnly = true,
                             enabled = false,
-                            modifier = Modifier.width(170.dp),
+                            modifier = Modifier.width(150.dp),
                             shape = MaterialTheme.shapes.extraLarge,
                             trailingIcon = {
                                 Icon(
@@ -133,7 +134,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                                 )
                             },
                             colors = OutlinedTextFieldDefaults.colors(
-                                disabledTextColor = Color.Black,
+                                disabledTextColor = Color.Gray,
                                 disabledBorderColor = Color.Gray,
                                 disabledLabelColor = Color.Gray,
                                 disabledTrailingIconColor = Color.Gray

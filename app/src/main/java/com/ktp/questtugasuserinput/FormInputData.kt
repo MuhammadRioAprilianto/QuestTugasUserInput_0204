@@ -98,6 +98,14 @@ fun InputData(modifier: Modifier) {
                         onValueChange = {namaBelakang = it}
                     )
                 }
+                OutlinedTextField(
+                    value = email,
+                    singleLine = true,
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.width(300.dp),
+                    label = {Text(text = "Email")},
+                    onValueChange = {email = it}
+                )
             }
         }
     }

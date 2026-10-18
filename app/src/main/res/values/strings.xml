@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">QuestTugasUserInput</string>
+    <string name="welcome_title">Welcome</string>
+    <string name="register_subtitle">You Can Start With Register</string>
+
+    <string name="label_first_name">Nama Depan</string>
+    <string name="label_last_name">Nama Belakang</string>
+    <string name="label_email">Email</string>
+    <string name="label_dob_placeholder">Tgl Lahir</string>
+    <string name="label_experience_placeholder">Experience</string>
+    <string name="label_select_skills">Pilih Skill Anda :</string>
+
+    <string name="skill_android">Android</string>
+    <string name="skill_ui_ux">UI/UX</string>
+    <string name="skill_web">Web</string>
+
+    <string name="exp_beginner">Beginner (0-1 Tahun)</string>
+    <string name="exp_intermediate">Intermediate (1-3 Tahun)</string>
+    <string name="exp_expert">Expert (>3 Tahun)</string>
+
+    <string name="btn_register">Register</string>
+    <string name="content_desc_choose_date">Pilih Tanggal</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <string name="result_title">Hasil Registration Data</string>
+    <string name="result_name_format">Nama : %1$s %2$s</string>
+    <string name="result_email_format">Email : %1$s</string>
+    <string name="result_dob_format">Tanggal Lahir : %1$s</string>
+    <string name="result_experience_format">Experience : %1$s</string>
+    <string name="result_skills_format">Skills : %1$s</string>
+    <string name="date_format">dd MMM yyyy</string>
 </resources>

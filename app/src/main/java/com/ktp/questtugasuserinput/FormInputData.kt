@@ -56,6 +56,9 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
     var selectedDateText by remember { mutableStateOf("Tgl Lahir") }
     var expanded by remember { mutableStateOf(false) }
     var selectedExperience by remember { mutableStateOf("Experience") }
+    var checkedAndroid by remember { mutableStateOf(false) }
+    var checkedUiUx by remember { mutableStateOf(false) }
+    var checkedWeb by remember { mutableStateOf(false) }
     val experienceOptions = listOf("Beginner (0-1 Tahun)", "Intermediate (1-3 Tahun)", "Expert (>3 Tahun)")
     val datePickerState = rememberDatePickerState()
 
@@ -103,7 +106,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                         value = namaDepan,
                         singleLine = true,
                         shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.width(150.dp),
+                        modifier = Modifier.width(155.dp),
                         label = {Text(text = "Nama Depan")},
                         onValueChange = {namaDepan = it}
                     )
@@ -112,7 +115,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                         value = namaBelakang,
                         singleLine = true,
                         shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.width(150.dp),
+                        modifier = Modifier.width(155.dp),
                         label = {Text(text = "Nama Belakang")},
                         onValueChange = {namaBelakang = it}
                     )
@@ -121,7 +124,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     value = email,
                     singleLine = true,
                     shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.width(300.dp),
+                    modifier = Modifier.width(310.dp),
                     label = {Text(text = "Email")},
                     onValueChange = {email = it}
                 )
@@ -133,7 +136,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             onValueChange = { },
                             readOnly = true,
                             enabled = false,
-                            modifier = Modifier.width(150.dp),
+                            modifier = Modifier.width(155.dp),
                             shape = MaterialTheme.shapes.extraLarge,
                             trailingIcon = {
                                 Icon(
@@ -159,7 +162,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     ExposedDropdownMenuBox(
                         expanded = expanded,
                         onExpandedChange = { expanded = !expanded },
-                        modifier = Modifier.width(150.dp)
+                        modifier = Modifier.width(155.dp)
                     ) {
                         OutlinedTextField(
                             value = selectedExperience,
@@ -171,6 +174,8 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             },
                             modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                             colors = OutlinedTextFieldDefaults.colors(
+                                disabledLabelColor = Color.Gray,
+                                disabledTextColor = Color.Gray,
                                 focusedBorderColor = Color.Gray,
                                 unfocusedBorderColor = Color.Gray
                             )

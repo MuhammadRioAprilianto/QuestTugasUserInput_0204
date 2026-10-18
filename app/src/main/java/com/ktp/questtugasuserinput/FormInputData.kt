@@ -86,7 +86,7 @@ fun InputData(modifier: Modifier) {
                         label = {Text(text = "Nama Depan")},
                         onValueChange = {namaDepan = it}
                     )
-
+                    Spacer(modifier = Modifier.width(5.dp))
                     OutlinedTextField(
                         value = namaBelakang,
                         singleLine = true,

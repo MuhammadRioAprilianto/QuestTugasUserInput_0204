@@ -51,7 +51,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -62,22 +64,39 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {}, onDismiss: () -> Unit = {}) {
-    //Variable untuk menyimpan apa yang diketik oleh KeyBoard
+fun InputData(
+    modifier: Modifier = Modifier,
+    onDateSelected: (Long?) -> Unit = {},
+    onDismiss: () -> Unit = {}
+) {
+    // Variable string resources untuk placeholder & pilihan
+    val dobPlaceholder = stringResource(R.string.label_dob_placeholder)
+    val experiencePlaceholder = stringResource(R.string.label_experience_placeholder)
+    val androidSkill = stringResource(R.string.skill_android)
+    val uiUxSkill = stringResource(R.string.skill_ui_ux)
+    val webSkill = stringResource(R.string.skill_web)
+    val dateFormat = stringResource(R.string.date_format)
+
+    val experienceOptions = listOf(
+        stringResource(R.string.exp_beginner),
+        stringResource(R.string.exp_intermediate),
+        stringResource(R.string.exp_expert)
+    )
+
+    // Variable untuk menyimpan apa yang diketik oleh Keyboard
     var namaDepan by remember { mutableStateOf("") }
     var namaBelakang by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
-    var selectedDateText by remember { mutableStateOf("Tgl Lahir") }
+    var selectedDateText by remember { mutableStateOf(dobPlaceholder) }
     var expanded by remember { mutableStateOf(false) }
-    var selectedExperience by remember { mutableStateOf("Experience") }
+    var selectedExperience by remember { mutableStateOf(experiencePlaceholder) }
     var checkedAndroid by remember { mutableStateOf(false) }
     var checkedUiUx by remember { mutableStateOf(false) }
     var checkedWeb by remember { mutableStateOf(false) }
-    val experienceOptions = listOf("Beginner (0-1 Tahun)", "Intermediate (1-3 Tahun)", "Expert (>3 Tahun)")
     val datePickerState = rememberDatePickerState()
 
-    //Variable untuk menyimpan data hasil input dari komponen UI
+    // Variable untuk menyimpan data hasil input dari komponen UI
     var hasilNamaDepan by remember { mutableStateOf("") }
     var hasilNamaBelakang by remember { mutableStateOf("") }
     var hasilEmail by remember { mutableStateOf("") }
@@ -85,6 +104,13 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
     var hasilExperience by remember { mutableStateOf("") }
     var hasilSkills by remember { mutableStateOf(listOf<String>()) }
     var showResultCard by remember { mutableStateOf(false) }
+
+    // Color resources
+    val charcoalDark = colorResource(R.color.charcoal_dark)
+    val textDarkGray = colorResource(R.color.text_dark_gray)
+    val dividerGray = colorResource(R.color.divider_gray)
+    val disabledButtonGray = colorResource(R.color.disabled_button_gray)
+    val resultTextGray = colorResource(R.color.result_text_gray)
 
     // Custom monochrome textField colors dengan font text warna hitam
     val customTextFieldColors = OutlinedTextFieldDefaults.colors(
@@ -135,9 +161,9 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     .padding(vertical = 24.dp, horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // 1. Title & Subtitle agar lebih mudah dibaca
+                // Title & Subtitle
                 Text(
-                    text = "Welcome",
+                    text = stringResource(R.string.welcome_title),
                     fontSize = 28.sp,
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Bold,
@@ -145,7 +171,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "You Can Start With Register",
+                    text = stringResource(R.string.register_subtitle),
                     fontSize = 14.sp,
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Medium,
@@ -153,14 +179,14 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // 2 & 3. Input fields tersusun rapi dengan text warna hitam
+                // Input fields
                 Row {
                     OutlinedTextField(
                         value = namaDepan,
                         singleLine = true,
                         shape = MaterialTheme.shapes.extraLarge,
                         modifier = Modifier.width(152.dp),
-                        label = { Text(text = "Nama Depan") },
+                        label = { Text(text = stringResource(R.string.label_first_name)) },
                         onValueChange = { namaDepan = it },
                         colors = customTextFieldColors
                     )
@@ -170,7 +196,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                         singleLine = true,
                         shape = MaterialTheme.shapes.extraLarge,
                         modifier = Modifier.width(152.dp),
-                        label = { Text(text = "Nama Belakang") },
+                        label = { Text(text = stringResource(R.string.label_last_name)) },
                         onValueChange = { namaBelakang = it },
                         colors = customTextFieldColors
                     )
@@ -181,7 +207,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     singleLine = true,
                     shape = MaterialTheme.shapes.extraLarge,
                     modifier = Modifier.width(310.dp),
-                    label = { Text(text = "Email") },
+                    label = { Text(text = stringResource(R.string.label_email)) },
                     onValueChange = { email = it },
                     colors = customTextFieldColors
                 )
@@ -198,12 +224,12 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             trailingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.DateRange,
-                                    contentDescription = "Pilih Tanggal",
+                                    contentDescription = stringResource(R.string.content_desc_choose_date),
                                     tint = Color.Gray
                                 )
                             },
                             colors = OutlinedTextFieldDefaults.colors(
-                                disabledTextColor = if (selectedDateText == "Tgl Lahir") Color.Gray else Color.Black,
+                                disabledTextColor = if (selectedDateText == dobPlaceholder) Color.Gray else Color.Black,
                                 disabledBorderColor = Color.Gray,
                                 disabledLabelColor = Color.Gray,
                                 disabledTrailingIconColor = Color.Gray
@@ -231,8 +257,8 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             },
                             modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedTextColor = if (selectedExperience == "Experience") Color.Gray else Color.Black,
-                                unfocusedTextColor = if (selectedExperience == "Experience") Color.Gray else Color.Black,
+                                focusedTextColor = if (selectedExperience == experiencePlaceholder) Color.Gray else Color.Black,
+                                unfocusedTextColor = if (selectedExperience == experiencePlaceholder) Color.Gray else Color.Black,
                                 disabledTextColor = Color.Black,
                                 focusedBorderColor = Color.Black,
                                 unfocusedBorderColor = Color.Gray,
@@ -253,7 +279,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                                     text = {
                                         Text(
                                             text = option,
-                                            color = Color(0xFF1E1E1E),
+                                            color = textDarkGray,
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.Medium
                                         )
@@ -269,7 +295,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Pilih Skill Anda :",
+                    text = stringResource(R.string.label_select_skills),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     color = Color.Black,
@@ -277,7 +303,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // 4. Checkbox dengan warna monokrom
+                // Checkbox
                 Row(
                     modifier = Modifier.width(310.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -294,7 +320,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             onCheckedChange = { checkedAndroid = it },
                             colors = checkboxColors
                         )
-                        Text(text = "Android", fontSize = 12.sp, color = Color.Black)
+                        Text(text = androidSkill, fontSize = 12.sp, color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
@@ -302,7 +328,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             onCheckedChange = { checkedUiUx = it },
                             colors = checkboxColors
                         )
-                        Text(text = "UI/UX", fontSize = 12.sp, color = Color.Black)
+                        Text(text = uiUxSkill, fontSize = 12.sp, color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
@@ -310,22 +336,22 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             onCheckedChange = { checkedWeb = it },
                             colors = checkboxColors
                         )
-                        Text(text = "Web", fontSize = 12.sp, color = Color.Black)
+                        Text(text = webSkill, fontSize = 12.sp, color = Color.Black)
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // 4. Tombol Register dengan tema monokrom
+                // Tombol Register
                 Button(
                     modifier = Modifier.width(310.dp),
                     shape = MaterialTheme.shapes.extraLarge,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Black,
                         contentColor = Color.White,
-                        disabledContainerColor = Color(0xFFCCCCCC),
+                        disabledContainerColor = disabledButtonGray,
                         disabledContentColor = Color.White
                     ),
-                    enabled = namaDepan.isNotBlank() && namaBelakang.isNotBlank() && email.isNotBlank() && selectedDateText != "Tgl Lahir" && selectedExperience != "Experience",
+                    enabled = namaDepan.isNotBlank() && namaBelakang.isNotBlank() && email.isNotBlank() && selectedDateText != dobPlaceholder && selectedExperience != experiencePlaceholder,
                     onClick = {
                         hasilNamaDepan = namaDepan
                         hasilNamaBelakang = namaBelakang
@@ -333,17 +359,17 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                         hasilTglLahir = selectedDateText
                         hasilExperience = selectedExperience
                         hasilSkills = listOfNotNull(
-                            if (checkedAndroid) "Android" else null,
-                            if (checkedUiUx) "UI/UX" else null,
-                            if (checkedWeb) "Web" else null
+                            if (checkedAndroid) androidSkill else null,
+                            if (checkedUiUx) uiUxSkill else null,
+                            if (checkedWeb) webSkill else null
                         )
                         showResultCard = true
                     }
                 ) {
-                    Text(text = "Register", fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.btn_register), fontWeight = FontWeight.Bold)
                 }
 
-                // 5 & 6. Bayangan pemisah + Nougat snack tersembunyi diawal
+                // Nougat snack (ElevatedCard)
                 AnimatedVisibility(visible = showResultCard) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Spacer(modifier = Modifier.height(20.dp))
@@ -351,30 +377,49 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             modifier = Modifier
                                 .width(310.dp)
                                 .shadow(2.dp),
-                            color = Color(0xFFE0E0E0)
+                            color = dividerGray
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                         ElevatedCard(
                             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFF222222)),
+                            colors = CardDefaults.cardColors(containerColor = charcoalDark),
                             shape = RoundedCornerShape(16.dp),
                             modifier = Modifier.width(310.dp)
                         ) {
                             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
                                 Text(
-                                    text = "Hasil Registration Data",
+                                    text = stringResource(R.string.result_title),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 16.sp,
                                     color = Color.White
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text(text = "Nama : $hasilNamaDepan $hasilNamaBelakang", color = Color(0xFFE0E0E0), fontSize = 13.sp)
-                                Text(text = "Email : $hasilEmail", color = Color(0xFFE0E0E0), fontSize = 13.sp)
-                                Text(text = "Tanggal Lahir : $hasilTglLahir", color = Color(0xFFE0E0E0), fontSize = 13.sp)
-                                Text(text = "Experience : $hasilExperience", color = Color(0xFFE0E0E0), fontSize = 13.sp)
                                 Text(
-                                    text = "Skills : " + (if (hasilSkills.isEmpty()) "-" else hasilSkills.joinToString(", ")),
-                                    color = Color(0xFFE0E0E0),
+                                    text = stringResource(R.string.result_name_format, hasilNamaDepan, hasilNamaBelakang),
+                                    color = resultTextGray,
+                                    fontSize = 13.sp
+                                )
+                                Text(
+                                    text = stringResource(R.string.result_email_format, hasilEmail),
+                                    color = resultTextGray,
+                                    fontSize = 13.sp
+                                )
+                                Text(
+                                    text = stringResource(R.string.result_dob_format, hasilTglLahir),
+                                    color = resultTextGray,
+                                    fontSize = 13.sp
+                                )
+                                Text(
+                                    text = stringResource(R.string.result_experience_format, hasilExperience),
+                                    color = resultTextGray,
+                                    fontSize = 13.sp
+                                )
+                                Text(
+                                    text = stringResource(
+                                        R.string.result_skills_format,
+                                        if (hasilSkills.isEmpty()) "-" else hasilSkills.joinToString(", ")
+                                    ),
+                                    color = resultTextGray,
                                     fontSize = 13.sp
                                 )
                             }
@@ -400,11 +445,11 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                         val formattedDate = Instant.ofEpochMilli(it)
                             .atZone(ZoneId.of("UTC"))
                             .toLocalDate()
-                            .format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
+                            .format(DateTimeFormatter.ofPattern(dateFormat))
                         selectedDateText = formattedDate
                     }
                 }) {
-                    Text("OK")
+                    Text(stringResource(R.string.btn_ok))
                 }
             },
             dismissButton = {
@@ -412,7 +457,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     showDatePicker = false
                     onDismiss()
                 }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.btn_cancel))
                 }
             }
         ) {

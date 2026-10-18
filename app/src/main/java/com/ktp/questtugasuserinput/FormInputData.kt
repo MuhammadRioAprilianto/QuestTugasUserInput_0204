@@ -86,6 +86,15 @@ fun InputData(modifier: Modifier) {
                         label = {Text(text = "Nama Depan")},
                         onValueChange = {namaDepan = it}
                     )
+
+                    OutlinedTextField(
+                        value = namaBelakang,
+                        singleLine = true,
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.width(150.dp),
+                        label = {Text(text = "Nama Belakang")},
+                        onValueChange = {namaBelakang = it}
+                    )
                 }
             }
         }

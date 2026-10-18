@@ -21,7 +21,11 @@ class MainActivity : ComponentActivity() {
             QuestTugasUserInputTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     InputData(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        onDateSelected = { millis ->
+                        },
+                        onDismiss = {
+                        }
                     )
                 }
             }

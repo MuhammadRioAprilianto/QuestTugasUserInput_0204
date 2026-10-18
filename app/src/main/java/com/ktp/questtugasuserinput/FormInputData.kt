@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +32,8 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun InputData(modifier: Modifier) {
+    //Variable untuk menyimpan apa yang diketik oleh KeyBoard
+    var namaDepan by remember { mutableStateOf("") }
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black),
@@ -67,6 +73,7 @@ fun InputData(modifier: Modifier) {
                     fontFamily = FontFamily.Default,
                     color = Color.Black
                 )
+
             }
         }
     }

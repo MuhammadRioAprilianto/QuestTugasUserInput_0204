@@ -45,6 +45,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.platform.LocalContext
 import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,6 +64,17 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
     var checkedWeb by remember { mutableStateOf(false) }
     val experienceOptions = listOf("Beginner (0-1 Tahun)", "Intermediate (1-3 Tahun)", "Expert (>3 Tahun)")
     val datePickerState = rememberDatePickerState()
+
+    //Variale untuk menyimpan data hasil input dari kompnen UI
+    var hasilNamaDepan by remember { mutableStateOf("") }
+    var hasilNamaBelakang by remember { mutableStateOf("") }
+    var hasilEmail by remember { mutableStateOf("") }
+    var hasilTglLahir by remember { mutableStateOf("") }
+    var hasilExperience by remember { mutableStateOf("") }
+    var hasilSkills by remember { mutableStateOf(listOf<String>()) }
+
+    val context = LocalContext.current
+
 
     Column(modifier = modifier
         .fillMaxSize()

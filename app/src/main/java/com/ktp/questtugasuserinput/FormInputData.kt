@@ -1,5 +1,6 @@
 package com.ktp.questtugasuserinput
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,10 +17,26 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -31,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -38,20 +56,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.ui.platform.LocalContext
+import java.time.Instant
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,27 +77,42 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
     val experienceOptions = listOf("Beginner (0-1 Tahun)", "Intermediate (1-3 Tahun)", "Expert (>3 Tahun)")
     val datePickerState = rememberDatePickerState()
 
-    //Variale untuk menyimpan data hasil input dari kompnen UI
+    //Variable untuk menyimpan data hasil input dari komponen UI
     var hasilNamaDepan by remember { mutableStateOf("") }
     var hasilNamaBelakang by remember { mutableStateOf("") }
     var hasilEmail by remember { mutableStateOf("") }
     var hasilTglLahir by remember { mutableStateOf("") }
     var hasilExperience by remember { mutableStateOf("") }
     var hasilSkills by remember { mutableStateOf(listOf<String>()) }
+    var showResultCard by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
+    // Custom monochrome textField colors dengan font text warna hitam
+    val customTextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = Color.Black,
+        unfocusedTextColor = Color.Black,
+        disabledTextColor = Color.Black,
+        focusedBorderColor = Color.Black,
+        unfocusedBorderColor = Color.Gray,
+        disabledBorderColor = Color.Gray,
+        focusedLabelColor = Color.Black,
+        unfocusedLabelColor = Color.Gray,
+        disabledLabelColor = Color.Gray,
+        cursorColor = Color.Black
+    )
 
-
-    Column(modifier = modifier
-        .fillMaxSize()
-        .background(Color.Black),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .clip(RoundedCornerShape(bottomStart = 25.dp)),
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Black),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(RoundedCornerShape(bottomStart = 25.dp)),
             contentAlignment = Alignment.Center
-            ) {
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.gamabarbackground),
                 contentDescription = null,
@@ -99,56 +121,71 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .clip(RoundedCornerShape(topEnd = 25.dp))
-            .background(Color.White),
-            contentAlignment = Alignment.Center) {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(topEnd = 25.dp))
+                .background(Color.White),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(vertical = 24.dp, horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // 1. Title & Subtitle agar lebih mudah dibaca
                 Text(
                     text = "Welcome",
-                    fontSize = 25.sp,
+                    fontSize = 28.sp,
                     fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "You Can Start With Register",
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     fontFamily = FontFamily.Default,
-                    color = Color.Black
+                    fontWeight = FontWeight.Medium,
+                    color = Color.DarkGray
                 )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 2 & 3. Input fields tersusun rapi dengan text warna hitam
                 Row {
                     OutlinedTextField(
                         value = namaDepan,
                         singleLine = true,
                         shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.width(155.dp),
-                        label = {Text(text = "Nama Depan")},
-                        onValueChange = {namaDepan = it}
+                        modifier = Modifier.width(152.dp),
+                        label = { Text(text = "Nama Depan") },
+                        onValueChange = { namaDepan = it },
+                        colors = customTextFieldColors
                     )
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     OutlinedTextField(
                         value = namaBelakang,
                         singleLine = true,
                         shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.width(155.dp),
-                        label = {Text(text = "Nama Belakang")},
-                        onValueChange = {namaBelakang = it}
+                        modifier = Modifier.width(152.dp),
+                        label = { Text(text = "Nama Belakang") },
+                        onValueChange = { namaBelakang = it },
+                        colors = customTextFieldColors
                     )
                 }
+                Spacer(modifier = Modifier.height(12.dp))
                 OutlinedTextField(
                     value = email,
                     singleLine = true,
                     shape = MaterialTheme.shapes.extraLarge,
                     modifier = Modifier.width(310.dp),
-                    label = {Text(text = "Email")},
-                    onValueChange = {email = it}
+                    label = { Text(text = "Email") },
+                    onValueChange = { email = it },
+                    colors = customTextFieldColors
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 Row {
                     Box {
                         OutlinedTextField(
@@ -156,7 +193,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             onValueChange = { },
                             readOnly = true,
                             enabled = false,
-                            modifier = Modifier.width(155.dp),
+                            modifier = Modifier.width(152.dp),
                             shape = MaterialTheme.shapes.extraLarge,
                             trailingIcon = {
                                 Icon(
@@ -166,7 +203,7 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                                 )
                             },
                             colors = OutlinedTextFieldDefaults.colors(
-                                disabledTextColor = Color.Gray,
+                                disabledTextColor = if (selectedDateText == "Tgl Lahir") Color.Gray else Color.Black,
                                 disabledBorderColor = Color.Gray,
                                 disabledLabelColor = Color.Gray,
                                 disabledTrailingIconColor = Color.Gray
@@ -178,11 +215,11 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                                 .clickable { showDatePicker = true }
                         )
                     }
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     ExposedDropdownMenuBox(
                         expanded = expanded,
                         onExpandedChange = { expanded = !expanded },
-                        modifier = Modifier.width(155.dp)
+                        modifier = Modifier.width(152.dp)
                     ) {
                         OutlinedTextField(
                             value = selectedExperience,
@@ -194,19 +231,33 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             },
                             modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                             colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = if (selectedExperience == "Experience") Color.Gray else Color.Black,
+                                unfocusedTextColor = if (selectedExperience == "Experience") Color.Gray else Color.Black,
+                                disabledTextColor = Color.Black,
+                                focusedBorderColor = Color.Black,
+                                unfocusedBorderColor = Color.Gray,
+                                disabledBorderColor = Color.Gray,
+                                focusedLabelColor = Color.Black,
+                                unfocusedLabelColor = Color.Gray,
                                 disabledLabelColor = Color.Gray,
-                                disabledTextColor = Color.Gray,
-                                focusedBorderColor = Color.Gray,
-                                unfocusedBorderColor = Color.Gray
+                                cursorColor = Color.Black
                             )
                         )
                         ExposedDropdownMenu(
                             expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier.background(Color.White)
                         ) {
                             experienceOptions.forEach { option ->
                                 DropdownMenuItem(
-                                    text = { Text(text = option) },
+                                    text = {
+                                        Text(
+                                            text = option,
+                                            color = Color(0xFF1E1E1E),
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    },
                                     onClick = {
                                         selectedExperience = option
                                         expanded = false
@@ -216,47 +267,64 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Pilih Skill Anda :",
                     fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
                     color = Color.Black,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 24.dp)
+                    modifier = Modifier.width(310.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+
+                // 4. Checkbox dengan warna monokrom
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.width(310.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val checkboxColors = CheckboxDefaults.colors(
+                        checkedColor = Color.Black,
+                        uncheckedColor = Color.Gray,
+                        checkmarkColor = Color.White
+                    )
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        androidx.compose.material3.Checkbox(
+                        Checkbox(
                             checked = checkedAndroid,
-                            onCheckedChange = { checkedAndroid = it }
+                            onCheckedChange = { checkedAndroid = it },
+                            colors = checkboxColors
                         )
                         Text(text = "Android", fontSize = 12.sp, color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        androidx.compose.material3.Checkbox(
+                        Checkbox(
                             checked = checkedUiUx,
-                            onCheckedChange = { checkedUiUx = it }
+                            onCheckedChange = { checkedUiUx = it },
+                            colors = checkboxColors
                         )
                         Text(text = "UI/UX", fontSize = 12.sp, color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        androidx.compose.material3.Checkbox(
+                        Checkbox(
                             checked = checkedWeb,
-                            onCheckedChange = { checkedWeb = it }
+                            onCheckedChange = { checkedWeb = it },
+                            colors = checkboxColors
                         )
                         Text(text = "Web", fontSize = 12.sp, color = Color.Black)
                     }
                 }
-                Spacer(modifier = Modifier.height(12.dp).padding(start = 8.dp, end = 8.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 4. Tombol Register dengan tema monokrom
                 Button(
                     modifier = Modifier.width(310.dp),
-                    //Button bisa digunakan ketika semua kolom sudah terisi
+                    shape = MaterialTheme.shapes.extraLarge,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White,
+                        disabledContainerColor = Color(0xFFCCCCCC),
+                        disabledContentColor = Color.White
+                    ),
                     enabled = namaDepan.isNotBlank() && namaBelakang.isNotBlank() && email.isNotBlank() && selectedDateText != "Tgl Lahir" && selectedExperience != "Experience",
                     onClick = {
                         hasilNamaDepan = namaDepan
@@ -269,23 +337,48 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                             if (checkedUiUx) "UI/UX" else null,
                             if (checkedWeb) "Web" else null
                         )
+                        showResultCard = true
                     }
                 ) {
-                    Text(text = "Register")
+                    Text(text = "Register", fontWeight = FontWeight.Bold)
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                ElevatedCard(
-                    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.Blue),
-                    modifier = Modifier
-                        .width(300.dp)
-                ) {
-                    Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 15.dp)) {
-                        Text(text = "Nama : " + hasilNamaDepan + " " + hasilNamaBelakang, color = Color.White)
-                        Text(text = "Email : " + hasilEmail, color = Color.White)
-                        Text(text = "Tanggal Lahir : " + hasilTglLahir, color = Color.White)
-                        Text(text = "Experience : " + hasilExperience, color = Color.White)
-                        Text(text = "Skills : " + hasilSkills.joinToString(", "), color = Color.White)
+
+                // 5 & 6. Bayangan pemisah + Nougat snack tersembunyi diawal
+                AnimatedVisibility(visible = showResultCard) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Spacer(modifier = Modifier.height(20.dp))
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .width(310.dp)
+                                .shadow(2.dp),
+                            color = Color(0xFFE0E0E0)
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                        ElevatedCard(
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF222222)),
+                            shape = RoundedCornerShape(16.dp),
+                            modifier = Modifier.width(310.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
+                                Text(
+                                    text = "Hasil Registration Data",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp,
+                                    color = Color.White
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(text = "Nama : $hasilNamaDepan $hasilNamaBelakang", color = Color(0xFFE0E0E0), fontSize = 13.sp)
+                                Text(text = "Email : $hasilEmail", color = Color(0xFFE0E0E0), fontSize = 13.sp)
+                                Text(text = "Tanggal Lahir : $hasilTglLahir", color = Color(0xFFE0E0E0), fontSize = 13.sp)
+                                Text(text = "Experience : $hasilExperience", color = Color(0xFFE0E0E0), fontSize = 13.sp)
+                                Text(
+                                    text = "Skills : " + (if (hasilSkills.isEmpty()) "-" else hasilSkills.joinToString(", ")),
+                                    color = Color(0xFFE0E0E0),
+                                    fontSize = 13.sp
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -304,10 +397,10 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     onDateSelected(millis)
 
                     millis?.let {
-                        val formattedDate = java.time.Instant.ofEpochMilli(it)
+                        val formattedDate = Instant.ofEpochMilli(it)
                             .atZone(ZoneId.of("UTC"))
                             .toLocalDate()
-                            .format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy"))
+                            .format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
                         selectedDateText = formattedDate
                     }
                 }) {

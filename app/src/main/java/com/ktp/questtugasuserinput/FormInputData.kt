@@ -3,6 +3,7 @@ package com.ktp.questtugasuserinput
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
@@ -194,6 +196,43 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                                 )
                             }
                         }
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Pilih Skill Anda :",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 24.dp)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        androidx.compose.material3.Checkbox(
+                            checked = checkedAndroid,
+                            onCheckedChange = { checkedAndroid = it }
+                        )
+                        Text(text = "Android", fontSize = 12.sp, color = Color.Black)
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        androidx.compose.material3.Checkbox(
+                            checked = checkedUiUx,
+                            onCheckedChange = { checkedUiUx = it }
+                        )
+                        Text(text = "UI/UX", fontSize = 12.sp, color = Color.Black)
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        androidx.compose.material3.Checkbox(
+                            checked = checkedWeb,
+                            onCheckedChange = { checkedWeb = it }
+                        )
+                        Text(text = "Web", fontSize = 12.sp, color = Color.Black)
                     }
                 }
             }

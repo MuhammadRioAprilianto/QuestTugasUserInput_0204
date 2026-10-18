@@ -58,6 +58,12 @@ fun InputData(modifier: Modifier) {
                 fontWeight = FontWeight.ExtraBold,
                 color = Color.Black
             )
+            Text(
+                text = "You Can Start With Register",
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Default,
+                color = Color.Black
+            )
         }
     }
 }

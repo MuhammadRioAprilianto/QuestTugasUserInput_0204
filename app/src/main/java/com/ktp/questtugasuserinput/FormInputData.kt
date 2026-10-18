@@ -2,21 +2,23 @@ package com.ktp.questtugasuserinput
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,15 +34,23 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import java.time.ZoneId
 
 @Composable
-fun InputData(modifier: Modifier) {
+fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {}, onDismiss: () -> Unit = {}) {
     //Variable untuk menyimpan apa yang diketik oleh KeyBoard
     var namaDepan by remember { mutableStateOf("") }
     var namaBelakang by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var selectedDateText by remember { mutableStateOf("Pilih Tanggal Lahir") }
+    val datePickerState = rememberDatePickerState()
 
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .fillMaxSize()
         .background(Color.Black),
         horizontalAlignment = Alignment.CenterHorizontally) {
@@ -79,11 +89,11 @@ fun InputData(modifier: Modifier) {
                     fontFamily = FontFamily.Default,
                     color = Color.Black
                 )
-                Row() {
+                Row {
                     OutlinedTextField(
                         value = namaDepan,
                         singleLine = true,
-                        shape = MaterialTheme.shapes.medium,
+                        shape = MaterialTheme.shapes.extraLarge,
                         modifier = Modifier.width(150.dp),
                         label = {Text(text = "Nama Depan")},
                         onValueChange = {namaDepan = it}
@@ -92,7 +102,7 @@ fun InputData(modifier: Modifier) {
                     OutlinedTextField(
                         value = namaBelakang,
                         singleLine = true,
-                        shape = MaterialTheme.shapes.medium,
+                        shape = MaterialTheme.shapes.extraLarge,
                         modifier = Modifier.width(150.dp),
                         label = {Text(text = "Nama Belakang")},
                         onValueChange = {namaBelakang = it}
@@ -101,12 +111,78 @@ fun InputData(modifier: Modifier) {
                 OutlinedTextField(
                     value = email,
                     singleLine = true,
-                    shape = MaterialTheme.shapes.medium,
+                    shape = MaterialTheme.shapes.extraLarge,
                     modifier = Modifier.width(300.dp),
                     label = {Text(text = "Email")},
                     onValueChange = {email = it}
                 )
+                Row {
+                    Box {
+                        OutlinedTextField(
+                            value = selectedDateText,
+                            onValueChange = { },
+                            readOnly = true,
+                            enabled = false,
+                            modifier = Modifier.width(170.dp),
+                            shape = MaterialTheme.shapes.extraLarge,
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.DateRange,
+                                    contentDescription = "Pilih Tanggal",
+                                    tint = Color.Gray
+                                )
+                            },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                disabledTextColor = Color.Black,
+                                disabledBorderColor = Color.Gray,
+                                disabledLabelColor = Color.Gray,
+                                disabledTrailingIconColor = Color.Gray
+                            )
+                        )
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .clickable { showDatePicker = true }
+                        )
+                    }
+                }
             }
+        }
+    }
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = {
+                showDatePicker = false
+                onDismiss()
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDatePicker = false
+                    val millis = datePickerState.selectedDateMillis
+                    onDateSelected(millis)
+
+                    // Opsional: Mengubah milidetik agar tampil teks tanggalnya di tombol
+                    millis?.let {
+                        val formattedDate = java.time.Instant.ofEpochMilli(it)
+                            .atZone(ZoneId.of("UTC"))
+                            .toLocalDate()
+                            .format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy"))
+                        selectedDateText = formattedDate
+                    }
+                }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDatePicker = false
+                    onDismiss()
+                }) {
+                    Text("Cancel")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 }

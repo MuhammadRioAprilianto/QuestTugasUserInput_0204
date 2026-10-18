@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +41,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -101,7 +105,8 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
             .background(Color.White),
             contentAlignment = Alignment.Center) {
             Column(modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "Welcome",
@@ -250,9 +255,9 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                 }
                 Spacer(modifier = Modifier.height(12.dp).padding(start = 8.dp, end = 8.dp))
                 Button(
-                    modifier = Modifier.fillMaxWidth(1f),
+                    modifier = Modifier.width(310.dp),
                     //Button bisa digunakan ketika semua kolom sudah terisi
-                    enabled = hasilNamaDepan.isNotEmpty() && hasilNamaBelakang.isNotEmpty() && hasilEmail.isNotEmpty() && hasilTglLahir.isNotEmpty() && hasilExperience.isNotEmpty(),
+                    enabled = namaDepan.isNotBlank() && namaBelakang.isNotBlank() && email.isNotBlank() && selectedDateText != "Tgl Lahir" && selectedExperience != "Experience",
                     onClick = {
                         hasilNamaDepan = namaDepan
                         hasilNamaBelakang = namaBelakang
@@ -267,6 +272,21 @@ fun InputData(modifier: Modifier = Modifier, onDateSelected: (Long?) -> Unit = {
                     }
                 ) {
                     Text(text = "Register")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                ElevatedCard(
+                    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.Blue),
+                    modifier = Modifier
+                        .width(300.dp)
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 15.dp)) {
+                        Text(text = "Nama : " + hasilNamaDepan + " " + hasilNamaBelakang, color = Color.White)
+                        Text(text = "Email : " + hasilEmail, color = Color.White)
+                        Text(text = "Tanggal Lahir : " + hasilTglLahir, color = Color.White)
+                        Text(text = "Experience : " + hasilExperience, color = Color.White)
+                        Text(text = "Skills : " + hasilSkills.joinToString(", "), color = Color.White)
+                    }
                 }
             }
         }

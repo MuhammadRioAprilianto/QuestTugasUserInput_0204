@@ -51,19 +51,23 @@ fun InputData(modifier: Modifier) {
             .clip(RoundedCornerShape(topEnd = 25.dp))
             .background(Color.White),
             contentAlignment = Alignment.Center) {
-            Text(
-                text = "Welcome",
-                fontSize = 25.sp,
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.Black
-            )
-            Text(
-                text = "You Can Start With Register",
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Default,
-                color = Color.Black
-            )
+            Column(modifier = Modifier
+                .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Welcome",
+                    fontSize = 25.sp,
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.Black
+                )
+                Text(
+                    text = "You Can Start With Register",
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily.Default,
+                    color = Color.Black
+                )
+            }
         }
     }
 }
